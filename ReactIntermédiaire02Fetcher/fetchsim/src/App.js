@@ -1,39 +1,26 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import QuoteCard from './QuoteCard';
 import axios from "axios";
 
 function App() {
-  const API = "https://simpsons-quotes-api.herokuapp.com/quotes";
+  const [quotes, setquotes] = React.useState("");
 
-	const [quotes, setquotes] = React.useState("");
+  const getQuotes = () => {
+    axios
+      .get("https://simpsons-quotes-api.herokuapp.com/quotes")
+      .then((res) => res.data)
+      .then((data) => {
+        setquotes(data[0]);
+      });
+  };
 
-	const getQuotes = () => {
-		axios
-			.get(API)
-			.then((res) => {
-				setquotes(res.data.value);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	};
 
-  
-  useEffect(() => {
-		getQuotes();
-	}, []);
-
-	const clickButton = () => {
-		getQuotes();
-	};
-
-console.log(API)
   return (
     <div>
-      <button onClick={clickButton}>
+      <button onClick={getQuotes}>
         citation Simpson 
       </button>
-      <span><QuoteCard  {...setquotes} /></span>
+      <QuoteCard  {...quotes} />
     </div>
   );
 }
